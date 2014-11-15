@@ -32,12 +32,18 @@ feedback = {
                  'POSITION': None,
                  'MISSING':  None,
                  },
+    'nos_dieron': {'RESULT': 'FAILED',
+                 'POSITION': None,
+                 'MISSING':  None,
+                 },
 }
 
 print bot.evaluate_turn(feedback['negativo'], 100)
+print bot.evaluate_turn(feedback['positivo'], 100)
 print bot.evaluate_turn(feedback['positivo'], 100)
 print bot.evaluate_turn(feedback['agua'], 100)
 print bot.evaluate_turn(feedback['agua_2'], 100)
 print bot.evaluate_turn(feedback['agua_3'], 100)
 print bot.evaluate_turn(feedback['agua_4'], 100)
 print bot.evaluate_turn(feedback['agua_5'], 100)
+print bot.evaluate_turn(feedback['nos_dieron'], 99)

@@ -33,13 +33,22 @@ class Bot(object):
         self.life, self.prev_life = (100, 100)
         self.feedback = None
         self.enemy = EnemyBot()
-        self.vel, self.angle = (100, 35)
+        self.vel, self.angle = (100, 45)
+
         self.increment_angle = {'HOT': 1,
                                 'WARM': 2,
                                 'MISSING': 3,
                                 'COLD': 4
                                 }
-        self.increment_angle_default = 5
+        self.def_increment_angle = 5
+
+        self.increment_vel = {'HOT': 5,
+                              'WARM': 10,
+                              'MISSING': 15,
+                              'COLD': 20
+                              }
+        self.def_increment_vel = 30
+        self.strategy = 'angle'
 
     def moveon(self):
         return {'ACTION': 'MOVE', 'WHERE': 1}
@@ -57,8 +66,13 @@ class Bot(object):
         return self.life < self.prev_life
 
     def get_next_shoot(self, feedback):
-        self.angle = self.angle + self.increment_angle.get(feedback['MISSING'],
-                                                           self.increment_angle_default)
+        if self.strategy == 'angle':
+            self.angle = self.angle + self.increment_angle.get(feedback['MISSING'],
+                                                               self.def_increment_angle)
+        else:
+            self.vel = self.vel + self.increment_vel.get(feedback['MISSING'],
+                                                         self.def_increment_vel)
+
         self.next_play = self.shoooot
 
     def get_next_move(self, feedback):
