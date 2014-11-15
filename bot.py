@@ -33,6 +33,13 @@ class Bot(object):
         self.life, self.prev_life = (100, 100)
         self.feedback = None
         self.enemy = EnemyBot()
+        self.vel, self.angle = (100, 35)
+        self.increment_angle = {'HOT': 1,
+                                'WARM': 2,
+                                'MISSING': 3,
+                                'COLD': 4
+                                }
+        self.increment_angle_default = 5
 
     def moveon(self):
         return {'ACTION': 'MOVE', 'WHERE': 1}
@@ -40,29 +47,27 @@ class Bot(object):
     def move_back(self):
         return {'ACTION': 'MOVE', 'WHERE': -1}
 
-    def shoooot(self, vel=100, angle=35):
-        return {'ACTION': 'SHOOT', 'VEL': vel, 'ANGLE': angle}
+    def shoooot(self):
+        return {'ACTION': 'SHOOT', 'VEL': self.vel, 'ANGLE': self.angle}
 
     def do_nothing(self):
         return None
 
     def dying(self, life):
-        return self.life <= self.prev_life
+        return self.life < self.prev_life
+
+    def get_next_shoot(self, feedback):
+        self.angle = self.angle + self.increment_angle.get(feedback['MISSING'],
+                                                           self.increment_angle_default)
+        self.next_play = self.shoooot
 
     def get_next_move(self, feedback):
         if feedback['RESULT'] == 'SUCCESS':
             self.enemy.life = self.enemy.life - 1
             self.enemy.position = feedback['POSITION']
             self.next_play = self.last_play
-        elif feedback['MISSING']:
-            if feedback['MISSING'] == 'HOT':
-                return self.shoooot
-            elif feedback['MISSING'] == 'WARM':
-                return self.moveon
-            elif feedback['MISSING'] == 'COLD':
-                return self.moveon
-
-        return self.shoooot
+        else:
+            self.get_next_shoot(feedback)
 
     def evaluate_turn(self, feedback, life):
         '''
