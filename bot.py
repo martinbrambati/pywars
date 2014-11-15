@@ -27,7 +27,7 @@ class EnemyBot(object):
 
 class Bot(object):
 
-    def __init_(self):
+    def __init__(self):
         self.next_play = self.shoooot
         self.last_play = None
         self.life, self.prev_life = (100, 100)
