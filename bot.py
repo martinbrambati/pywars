@@ -79,9 +79,9 @@ class Bot(object):
         self.feedback = feedback
         self.life = life
 
-        self.get_next_move()
+        self.get_next_move(feedback)
 
-        if self.dying():
+        if self.dying(life):
             self.next_play = self.moveon
 
         self.last_play = self.next_play
